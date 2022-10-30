@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  function isHR(request) {
+    return request.auth != null && 
+      'token' in request.auth && 
+      'claim' in request.auth.token && 
+      request.auth.token.claim == "HR"
+  }
+  function isOwner(uid, request) {
+    return request.auth != null && 
+      request.auth.uid == uid
+  }
+
+  match /databases/{database}/documents {
+
+    match /userProfile/{uid} {
+
+      //allow user profile create & update for HR department members
+      allow create, update: if 
+        isHR(request);
+
+      //allow user profile read for:
+      // - the profile owner
+      // - HR department members
+      allow read: if 
+        isOwner(uid, request) ||
+        isHR(request)
+
+    }
+  }
+}
