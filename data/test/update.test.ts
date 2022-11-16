@@ -33,8 +33,8 @@ describe('update user profile', () => {
     }
     const hrContext = hr.firestore()
      await firebase.assertSucceeds(
-      hrContext.doc("userProfile/" + uid).set(profile).then(_ => {
-        hrContext.doc("userProfile/" + uid).update(profile)
+      hrContext.doc("profiles/" + uid).set(profile).then(_ => {
+        hrContext.doc("profiles/" + uid).update(profile)
       })
     ) 
   })

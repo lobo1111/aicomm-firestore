@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "production": "aicommmvp",
+    "default": "aicommmvp"
+  },
+  "targets": {},
+  "etags": {}
+}

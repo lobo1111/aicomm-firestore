@@ -33,8 +33,8 @@ describe('get user profile', () => {
     }
     const firestore = context.firestore()
     await firebase.assertSucceeds(
-      firestore.doc("userProfile/" + uid).set(profile).then(_ => {
-        firestore.doc("userProfile/test@test.com").get()
+      firestore.doc("profiles/" + uid).set(profile).then(_ => {
+        firestore.doc("profiles/test@test.com").get()
       })
     )
   })
@@ -51,8 +51,8 @@ describe('get user profile', () => {
     const hrContext = hr.firestore()
     const regularContext = regular.firestore()
     await firebase.assertSucceeds(
-      hrContext.doc("userProfile/" + uid).set(profile).then(_ => {
-        regularContext.doc("userProfile/" + uid).get()
+      hrContext.doc("profiles/" + uid).set(profile).then(_ => {
+        regularContext.doc("profiles/" + uid).get()
       })
     )
   })
@@ -69,9 +69,9 @@ describe('get user profile', () => {
     }
     const hrContext = hr.firestore()
     const notOwnerContext = notowner.firestore()
-    await hrContext.doc("userProfile/" + hruid).set(profile)
+    await hrContext.doc("profiles/" + hruid).set(profile)
     await firebase.assertFails(
-      notOwnerContext.doc("userProfile/" + hruid).get()
+      notOwnerContext.doc("profiles/" + hruid).get()
     )
   })
 
@@ -86,9 +86,9 @@ describe('get user profile', () => {
     }
     const hrContext = hr.firestore()
     const notOwnerContext = context.firestore()
-    await hrContext.doc("userProfile/" + uid).set(profile)
+    await hrContext.doc("profiles/" + uid).set(profile)
     await firebase.assertFails(
-      notOwnerContext.doc("userProfile/" + uid).get()
+      notOwnerContext.doc("profiles/" + uid).get()
     )
   })
 })

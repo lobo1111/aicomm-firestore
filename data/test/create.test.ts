@@ -32,7 +32,7 @@ describe('create user profile', () => {
         "department": "engineering"
     }
     await firebase.assertSucceeds(
-      context.firestore().doc("userProfile/" + uid).set(profile)
+      context.firestore().doc("profiles/" + uid).set(profile)
     )
   })
 
@@ -45,7 +45,7 @@ describe('create user profile', () => {
         "department": "engineering"
     }
     await firebase.assertFails(
-      context.firestore().doc("userProfile/" + uid).set(profile)
+      context.firestore().doc("profiles/" + uid).set(profile)
     )
   })
 
@@ -58,7 +58,7 @@ describe('create user profile', () => {
         "department": "engineering"
     }
     await firebase.assertFails(
-      context.firestore().doc("userProfile/" + uid).set(profile)
+      context.firestore().doc("profiles/" + uid).set(profile)
     )
   }) 
 })
