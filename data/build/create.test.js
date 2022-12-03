@@ -26,9 +26,10 @@ describe('create user profile', () => {
         const profile = {
             "email": "test@test.com",
             "manager": "manager@test.com",
-            "department": "engineering"
+            "department": "engineering",
+            "uid": uid,
         };
-        await firebase.assertSucceeds(context.firestore().doc("userProfile/" + uid).set(profile));
+        await firebase.assertSucceeds(context.firestore().doc("persons/" + uid).set(profile));
     });
     it('create user profile as non HR department member', async () => {
         const uid = (0, uuid_1.v4)();
@@ -36,9 +37,10 @@ describe('create user profile', () => {
         const profile = {
             "email": "test@test.com",
             "manager": "manager@test.com",
-            "department": "engineering"
+            "department": "engineering",
+            "uid": uid,
         };
-        await firebase.assertFails(context.firestore().doc("userProfile/" + uid).set(profile));
+        await firebase.assertFails(context.firestore().doc("persons/" + uid).set(profile));
     });
     it('create user profile as unauthenticated user', async () => {
         const uid = (0, uuid_1.v4)();
@@ -46,9 +48,10 @@ describe('create user profile', () => {
         const profile = {
             "email": "test@test.com",
             "manager": "manager@test.com",
-            "department": "engineering"
+            "department": "engineering",
+            "uid": uid,
         };
-        await firebase.assertFails(context.firestore().doc("userProfile/" + uid).set(profile));
+        await firebase.assertFails(context.firestore().doc("persons/" + uid).set(profile));
     });
 });
 //# sourceMappingURL=create.test.js.map

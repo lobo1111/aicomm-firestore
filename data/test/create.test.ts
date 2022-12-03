@@ -29,10 +29,11 @@ describe('create user profile', () => {
     const profile = {
         "email": "test@test.com",
         "manager": "manager@test.com",
-        "department": "engineering"
+        "department": "engineering",
+        "uid": uid,
     }
     await firebase.assertSucceeds(
-      context.firestore().doc("profiles/" + uid).set(profile)
+      context.firestore().doc("persons/" + uid).set(profile)
     )
   })
 
@@ -42,10 +43,11 @@ describe('create user profile', () => {
     const profile = {
         "email": "test@test.com",
         "manager": "manager@test.com",
-        "department": "engineering"
+        "department": "engineering",
+        "uid": uid,
     }
     await firebase.assertFails(
-      context.firestore().doc("profiles/" + uid).set(profile)
+      context.firestore().doc("persons/" + uid).set(profile)
     )
   })
 
@@ -55,10 +57,11 @@ describe('create user profile', () => {
     const profile = {
         "email": "test@test.com",
         "manager": "manager@test.com",
-        "department": "engineering"
+        "department": "engineering",
+        "uid": uid,
     }
     await firebase.assertFails(
-      context.firestore().doc("profiles/" + uid).set(profile)
+      context.firestore().doc("persons/" + uid).set(profile)
     )
   }) 
 })
