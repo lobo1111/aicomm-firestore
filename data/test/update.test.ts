@@ -29,12 +29,13 @@ describe('update user profile', () => {
     const profile = {
         "email": "test@test.com",
         "manager": "other-manager@test.com",
-        "department": "engineering"
+        "department": "engineering",
+        "uid": uid,
     }
     const hrContext = hr.firestore()
      await firebase.assertSucceeds(
-      hrContext.doc("userProfile/" + uid).set(profile).then(_ => {
-        hrContext.doc("userProfile/" + uid).update(profile)
+      hrContext.doc("persons/" + uid).set(profile).then(_ => {
+        hrContext.doc("persons/" + uid).update(profile)
       })
     ) 
   })
