@@ -2,6 +2,26 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
 class Authentication {
+  createDefaultClaims({ email }: { email?: string } = {}): { hr: boolean } {
+    const claims = {
+      hr: false,
+    };
+    if (email?.endsWith("kopacki.eu")) {
+      functions.logger.info("Privileged user detected!");
+      claims.hr = true;
+    }
+    return claims;
+  }
+
+  async setClaims({ userRecord }: { userRecord: any }): Promise<void> {
+    functions.logger.log("Custom claims request: ", JSON.stringify(userRecord));
+    return admin.auth().setCustomUserClaims(userRecord.uid, userRecord.claims);
+  }
+
+  generatePassword(): string {
+    return Math.random().toString(36).slice(-8);
+  }
+
   async isTokenValid(token: string) {
     functions.logger.log("Token validation: ", token);
     return admin
