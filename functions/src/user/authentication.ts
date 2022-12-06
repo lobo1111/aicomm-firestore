@@ -7,6 +7,7 @@ class Authentication {
       hr: false,
     };
     if (email?.endsWith("kopacki.eu")) {
+      //A hack until I figure out test data import
       functions.logger.info("Privileged user detected!");
       claims.hr = true;
     }
