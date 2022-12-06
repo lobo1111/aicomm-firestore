@@ -8,10 +8,12 @@ class UserDocument {
     admin
       .firestore()
       .collection("users")
-      .add({
+      .doc(profile?.uid)
+      .set({
         uid: profile?.uid,
         email: profile.get("email"),
         claims: new Authentication().createDefaultClaims(profile?.email),
+        profile: profile.ref,
       });
   }
 

@@ -22,18 +22,12 @@ class UserRegister {
     let password = new Authentication().generatePassword();
     return admin
       .auth()
-      .getUserByEmail(email)
-      .then((user) => {
-        throw new Error("User already exists!");
-      })
-      .catch(() =>
-        admin.auth().createUser({
-          email: email,
-          emailVerified: true,
-          password: password,
-          disabled: false,
-        })
-      )
+      .createUser({
+        email: email,
+        emailVerified: true,
+        password: password,
+        disabled: false,
+      }) //this will drop an error if users exists, will be catched later
       .then((user) => {
         return { user: user, password: password };
       });
