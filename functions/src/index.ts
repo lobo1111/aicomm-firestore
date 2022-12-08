@@ -21,19 +21,58 @@ exports.userCreated = functions.auth.user().onCreate(async (user) => {
 exports.setClaims = functions.firestore
   .document("/users/{documentId}")
   .onUpdate((snap, context) =>
-    new Authentication().setClaims({ userRecord: snap.after.data() })
+    new Authentication().setClaims(
+      snap.after.data().uid,
+      snap.after.data().claims
+    )
   );
 
-app.post("/createUser", (request: any, response: any) => {
+app.post("/user", (request: any, response: any) => {
   new Authentication()
     .isHR(request.headers.authorization?.split("Bearer ")[1])
-    .then(() => new UserRegister().parseRequest(request.body))
+    .then(() => new UserRegister().extractEmail(request.body))
     .then((email: string) => new UserRegister().registerUser({ email }))
     .then((userRecord: { user: void | UserRecord; password: string }) => {
-      response.status(200).send({
+      response.status(201).send({
         uid: userRecord.user?.uid,
         password: userRecord.password,
       });
+    })
+    .catch((error) => {
+      functions.logger.log("Error: ", error);
+      response.status(404).send();
+    });
+});
+
+app.patch("/user/:uid/status", (request: any, response: any) => {
+  new Authentication()
+    .isHR(request.headers.authorization?.split("Bearer ")[1])
+    .then(() =>
+      new UserRegister().extractUserData(request.params, request.body)
+    )
+    .then((userData: { uid: string; status: boolean }) =>
+      new UserRegister().updateUser(userData)
+    )
+    .then(() => {
+      response.status(202).send();
+    })
+    .catch((error) => {
+      functions.logger.log("Error: ", error);
+      response.status(404).send();
+    });
+});
+
+app.patch("/user/:uid/claims", (request: any, response: any) => {
+  new Authentication()
+    .isHR(request.headers.authorization?.split("Bearer ")[1])
+    .then(() =>
+      new UserRegister().extractUserData(request.params, request.body)
+    )
+    .then((userData: { uid: string; claims: any }) =>
+      new Authentication().setClaims(userData.uid, userData.claims)
+    )
+    .then(() => {
+      response.status(202).send();
     })
     .catch((error) => {
       functions.logger.log("Error: ", error);
