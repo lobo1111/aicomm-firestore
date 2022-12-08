@@ -4,13 +4,32 @@ import * as functions from "firebase-functions";
 import { Authentication } from "./authentication";
 
 class UserRegister {
-  async parseRequest(request?: any): Promise<any> {
+  async extractEmail(request?: any): Promise<any> {
     functions.logger.log("Parsing payload: ", JSON.stringify(request));
     if (request.email !== undefined) {
       return request.email;
     } else {
       throw new Error("Invalid payload");
     }
+  }
+
+  async extractUserData(params?: any, request?: any): Promise<any> {
+    functions.logger.log("Parsing payload: ", JSON.stringify(request));
+    if (params.uid !== undefined) {
+      return {
+        uid: params.uid,
+        status: request.status,
+        claims: request.claims,
+      };
+    } else {
+      throw new Error("Invalid payload");
+    }
+  }
+
+  async updateUser(userData: { uid: string; status: boolean }) {
+    return admin.auth().updateUser(userData.uid, {
+      disabled: !userData.status,
+    });
   }
 
   async registerUser({

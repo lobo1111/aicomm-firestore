@@ -14,9 +14,8 @@ class Authentication {
     return claims;
   }
 
-  async setClaims({ userRecord }: { userRecord: any }): Promise<void> {
-    functions.logger.log("Custom claims request: ", JSON.stringify(userRecord));
-    return admin.auth().setCustomUserClaims(userRecord.uid, userRecord.claims);
+  async setClaims(uid: string, claims: any): Promise<void> {
+    return admin.auth().setCustomUserClaims(uid, claims);
   }
 
   generatePassword(): string {
