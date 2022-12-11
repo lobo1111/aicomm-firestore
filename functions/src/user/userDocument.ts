@@ -14,6 +14,7 @@ class UserDocument {
         email: profile.get("email"),
         claims: new Authentication().createDefaultClaims(profile?.email),
         profile: profile.ref,
+        active: true,
       });
   }
 
