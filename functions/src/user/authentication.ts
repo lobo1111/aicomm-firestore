@@ -18,6 +18,12 @@ class Authentication {
     return admin.auth().setCustomUserClaims(uid, claims);
   }
 
+  async disable(uid: string, active: boolean) {
+    return admin.auth().updateUser(uid, {
+      disabled: !active,
+    });
+  }
+
   generatePassword(): string {
     return Math.random().toString(36).slice(-8);
   }

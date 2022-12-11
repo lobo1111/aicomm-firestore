@@ -18,13 +18,17 @@ exports.userCreated = functions.auth.user().onCreate(async (user) => {
     .then((profileDoc) => userMgmt.createUserRecord(profileDoc));
 });
 
-exports.setClaims = functions.firestore
+exports.updateUser = functions.firestore
   .document("/users/{documentId}")
   .onUpdate((snap, context) =>
-    new Authentication().setClaims(
-      snap.after.data().uid,
-      snap.after.data().claims
-    )
+    new Authentication()
+      .setClaims(snap.after.data().uid, snap.after.data().claims)
+      .then(() =>
+        new Authentication().disable(
+          snap.after.data().uid,
+          snap.after.data().active
+        )
+      )
   );
 
 app.post("/user", (request: any, response: any) => {
@@ -37,42 +41,6 @@ app.post("/user", (request: any, response: any) => {
         uid: userRecord.user?.uid,
         password: userRecord.password,
       });
-    })
-    .catch((error) => {
-      functions.logger.log("Error: ", error);
-      response.status(404).send();
-    });
-});
-
-app.patch("/user/:uid/status", (request: any, response: any) => {
-  new Authentication()
-    .isHR(request.headers.authorization?.split("Bearer ")[1])
-    .then(() =>
-      new UserRegister().extractUserData(request.params, request.body)
-    )
-    .then((userData: { uid: string; status: boolean }) =>
-      new UserRegister().updateUser(userData)
-    )
-    .then(() => {
-      response.status(202).send();
-    })
-    .catch((error) => {
-      functions.logger.log("Error: ", error);
-      response.status(404).send();
-    });
-});
-
-app.patch("/user/:uid/claims", (request: any, response: any) => {
-  new Authentication()
-    .isHR(request.headers.authorization?.split("Bearer ")[1])
-    .then(() =>
-      new UserRegister().extractUserData(request.params, request.body)
-    )
-    .then((userData: { uid: string; claims: any }) =>
-      new Authentication().setClaims(userData.uid, userData.claims)
-    )
-    .then(() => {
-      response.status(202).send();
     })
     .catch((error) => {
       functions.logger.log("Error: ", error);

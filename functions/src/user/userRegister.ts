@@ -26,12 +26,6 @@ class UserRegister {
     }
   }
 
-  async updateUser(userData: { uid: string; status: boolean }) {
-    return admin.auth().updateUser(userData.uid, {
-      disabled: !userData.status,
-    });
-  }
-
   async registerUser({
     email,
   }: {
